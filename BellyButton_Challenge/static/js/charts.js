@@ -70,7 +70,8 @@ function buildCharts(sample) {
     var objectid = firstsample.otu_ids;
     var objectlb = firstsample.otu_labels;
     var objectsv = firstsample.sample_values;
-    //console.log(objectid);
+  
+    console.log(objectsv);
 
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
@@ -102,10 +103,11 @@ function buildCharts(sample) {
      var bubbleData = [{
       x: objectid.slice(0,10).reverse(),
       y: objectsv.slice(0,10).reverse(),
-      mode: "markers",
+      text: objectlb.slice(0,10).reverse(),
+      mode: 'markers',
       marker: {
-        color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
-        size: [objectlb]
+        color: objectid.slice(0,10).reverse(),
+        size: objectsv.slice(0,10).reverse(),
       
      }}];
      // 2. Create the layout for the bubble chart.
@@ -117,22 +119,52 @@ function buildCharts(sample) {
      // 3. Use Plotly to plot the data with the layout.
      Plotly.newPlot("bubble",bubbleData, bubbleLayout); 
 
+     // 1. Create a variable that filters the metadata array for the object with the desired sample number.
+     var metadatarray = data.metadata.filter(data => data.id == sample);
+    // Create a variable that holds the first sample in the array.
+    var firstswreq =metadatarray[0].wfreq;
+
+    // 2. Create a variable that holds the first sample in the metadata array.
+    
+
+    // Create variables that hold the otu_ids, otu_labels, and sample_values.
+
+
+    // 3. Create a variable that holds the washing frequency.
+
       // 4. Create the trace for the gauge chart.
     var gaugeData = [
-     
+
       {
 
         domain: { 
           x: [0, 1], 
           y: [0, 1] },
     
-        value: 270,
+        value: firstswreq,
     
         title: { text: "Scrubs per Week" },
     
         type: "indicator",
     
-        mode: "gauge+number"
+        mode: "gauge+number",
+
+        gauge: {
+
+          axis: { range: [null, 10], tickvals: [0,2,4,6,8,10] },
+    
+          bar: { color: "black" },
+    
+          steps: [
+    
+            { range: [0, 2], color: "red" },
+            { range: [2, 4], color: "orange" },
+            { range: [4, 6], color: "yellow" },
+            { range: [6, 8], color: "lightgreen" },
+            { range: [8, 10], color: "green" }
+    
+          ]}
+
     
       }
     
@@ -140,7 +172,9 @@ function buildCharts(sample) {
     
     // 5. Create the layout for the gauge chart.
     var gaugeLayout = { 
-      title: "Belly Button Washer Frequency"
+      title: "Belly Button Washing Frequency",
+
+      
      
     };
 
